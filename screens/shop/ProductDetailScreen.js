@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   description: {
+    fontFamily: "open-sans",
     fontSize: 14,
     textAlign: "center",
     marginHorizontal: 20,
