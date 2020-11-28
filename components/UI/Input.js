@@ -13,10 +13,11 @@ const inputReducer = (state, action) => {
         isValid: action.isValid,
       };
     case INPUT_BLUR:
-      return {
+      const newState = {
         ...state,
         touched: true,
       };
+      return newState;
     default:
       return state;
   }
@@ -59,7 +60,7 @@ const Input = (props) => {
   };
 
   const lostFocusHandler = () => {
-    dispatch(INPUT_BLUR);
+    dispatch({ type: INPUT_BLUR });
   };
 
   return (
@@ -72,7 +73,11 @@ const Input = (props) => {
         onChangeText={textChangeHandler}
         onBlur={lostFocusHandler}
       />
-      {!inputState.isValid && <Text>{props.errorText}</Text>}
+      {!inputState.isValid && inputState.touched && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{props.errorText}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -87,6 +92,14 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: "open-sans-bold",
     marginVertical: 8,
+  },
+  errorContainer: {
+    marginVertical: 5,
+  },
+  errorText: {
+    fontFamily: "open-sans",
+    color: "red",
+    fontSize: 15,
   },
 });
 
