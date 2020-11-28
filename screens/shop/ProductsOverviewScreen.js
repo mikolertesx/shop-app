@@ -33,6 +33,14 @@ const ProductsOverviewScreen = (props) => {
     setisLoading(false);
   }, [dispatch, setisLoading, setError]);
 
+
+  useEffect(() => {
+    let navigationEvent = props.navigation.addListener("willFocus", loadProducts);
+    return () => {
+      navigationEvent.remove();
+    };
+  }, [loadProducts]);
+
   useEffect(() => {
     loadProducts();
   }, [dispatch, loadProducts]);
