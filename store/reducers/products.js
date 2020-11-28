@@ -14,10 +14,10 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case CREATE_PRODUCT:
-      const { title, imageUrl, description, price } = action.productData;
+      const { id, title, imageUrl, description, price } = action.productData;
 
       const newProduct = new Product(
-        new Date().toString(),
+        id,
         "u1",
         title,
         imageUrl,
