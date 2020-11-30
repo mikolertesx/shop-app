@@ -17,32 +17,38 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 
 const ProductsOverviewScreen = (props) => {
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   const products = useSelector((state) => state.products.availableProducts);
   const dispatch = useDispatch();
 
   const loadProducts = useCallback(async () => {
     setError(null);
-    setisLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(productActions.fetchProducts());
     } catch (err) {
       setError(err.message);
     }
-    setisLoading(false);
-  }, [dispatch, setisLoading, setError]);
-
+    setIsRefreshing(false);
+  }, [dispatch, setIsLoading, setError]);
 
   useEffect(() => {
-    let navigationEvent = props.navigation.addListener("willFocus", loadProducts);
+    let navigationEvent = props.navigation.addListener(
+      "willFocus",
+      loadProducts
+    );
     return () => {
       navigationEvent.remove();
     };
   }, [loadProducts]);
 
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadProducts]);
 
   const selectItemHandler = (id, title) => {
@@ -83,6 +89,8 @@ const ProductsOverviewScreen = (props) => {
 
   return (
     <FlatList
+      refreshing={isRefreshing}
+      onRefresh={loadProducts}
       data={products}
       renderItem={(itemData) => (
         <ProductItem
