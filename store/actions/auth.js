@@ -17,7 +17,6 @@ export const signup = (email, password) => {
         }),
       }
     );
-
     const resData = await response.json();
     if (!response.ok) {
       const errorId = resData.error.message;
@@ -32,7 +31,11 @@ export const signup = (email, password) => {
       }
       throw new Error(message);
     }
-    dispatch({ type: SIGN_UP });
+    dispatch({
+      type: SIGN_UP,
+      token: resData.idToken,
+      userId: resData.localId,
+    });
   };
 };
 
@@ -52,7 +55,6 @@ export const login = (email, password) => {
         }),
       }
     );
-
     const resData = await response.json();
     if (!response.ok) {
       const errorId = resData.error.message;
@@ -70,7 +72,10 @@ export const login = (email, password) => {
       }
       throw new Error(message);
     }
-
-    dispatch({ type: LOGIN });
+    dispatch({
+      type: LOGIN,
+      token: resData.idToken,
+      userId: resData.localId,
+    });
   };
 };
