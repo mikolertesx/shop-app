@@ -6,7 +6,8 @@ export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 export const SET_PRODUCTS = "SET_PRODUCTS";
 
 export const fetchProducts = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
     try {
       const response = await fetch(
         "https://my-project-9819f.firebaseio.com/products.json"
@@ -26,8 +27,11 @@ export const fetchProducts = () => {
           new Product(key, "u1", title, imageUrl, description, price)
         );
       }
-
-      dispatch({ type: SET_PRODUCTS, products: loadedProducts });
+      dispatch({
+        type: SET_PRODUCTS,
+        products: loadedProducts,
+        userProducts: loadedProducts.filter((prod) => prod.ownerId === userId),
+      });
     } catch (error) {
       throw error;
     }
@@ -49,6 +53,7 @@ export const deleteProduct = (productId) => {
 
 export const createProduct = (title, description, imageUrl, price) => {
   return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
     const token = getState().auth.token;
     const response = await fetch(
       `https://my-project-9819f.firebaseio.com/products.json?auth=${token}`,
@@ -62,6 +67,7 @@ export const createProduct = (title, description, imageUrl, price) => {
           description,
           imageUrl,
           price,
+          ownerId: userId,
         }),
       }
     );

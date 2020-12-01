@@ -72,6 +72,8 @@ export const login = (email, password) => {
       }
       throw new Error(message);
     }
+    console.log("Token: ", resData.idToken, "Id: ",resData.localId);
+
     dispatch({
       type: LOGIN,
       token: resData.idToken,
